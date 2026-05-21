@@ -79,75 +79,116 @@
       사용자의 난이도와 선호 환경을 기반으로 제주 러닝코스를 추천합니다.
     </p>
 
-    <label>난이도 선택</label>
-    <select id="level">
-      <option value="easy">쉬움</option>
-      <option value="medium">보통</option>
     </select>
+<label>난이도 선택</label>
+<select id="level">
+  <option>초급</option>
+  <option>초급~중급</option>
+  <option>중급</option>
+  <option>중상급 이상</option>
+</select>
 
-    <label>선호 환경 선택</label>
-    <select id="environment">
-      <option value="ocean">바다</option>
-      <option value="forest">숲</option>
-      <option value="city">도심</option>
-    </select>
+<label>거리 선택</label>
+<select id="distance">
+  <option>2km 이하</option>
+  <option>3~5km</option>
+  <option>6km 내외</option>
+  <option>10km 이상</option>
+</select>
 
-    <button onclick="recommendCourse()">러닝코스 추천받기</button>
+<label>분위기 선택</label>
+<select id="mood">
+  <option>바다</option>
+  <option>감성</option>
+  <option>자연</option>
+  <option>관광</option>
+  <option>일상</option>
+  <option>힐링</option>
+</select>
+
+<label>목적 선택</label>
+<select id="purpose">
+  <option>산책</option>
+  <option>가벼운 러닝</option>
+  <option>다이어트</option>
+  <option>관광 러닝</option>
+  <option>장거리 러닝</option>
+  <option>체력 향상</option>
+</select>
+
+<label>안전 조건</label>
+<select id="safety">
+  <option>가로등</option>
+  <option>데크길</option>
+  <option>차량 통행 적음</option>
+  <option>관광객 혼잡도 낮음</option>
+  <option>편의시설</option>
+</select>
+
+<label>날씨 조건</label>
+<select id="weather">
+  <option>바람 적음</option>
+  <option>습도 낮음</option>
+  <option>직사광선 적음</option>
+  <option>야간 러닝 가능</option>
+</select>
+
+<button onclick="recommendCourse()">러닝코스 추천받기</button>
+
+<div id="result"></div>
+    
 
     <div class="result" id="result"></div>
   </div>
 
   <script>
-    const courses = [
-      { name: "이호테우", distance: "3km", level: "easy", environment: "ocean" },
-      { name: "삼양해변", distance: "5km", level: "medium", environment: "ocean" },
-      { name: "한라수목원", distance: "2km", level: "easy", environment: "forest" },
-      { name: "전농로", distance: "4km", level: "easy", environment: "city" },
-      { name: "사라봉", distance: "3.5km", level: "medium", environment: "forest" }
-    ];
+    
+function recommendCourse() {
+  const level = document.getElementById("level").value;
+  const distance = document.getElementById("distance").value;
+  const mood = document.getElementById("mood").value;
+  const purpose = document.getElementById("purpose").value;
+  const safety = document.getElementById("safety").value;
+  const weather = document.getElementById("weather").value;
 
-    function recommendCourse() {
-      const userLevel = document.getElementById("level").value;
-      const userEnvironment = document.getElementById("environment").value;
-      const resultDiv = document.getElementById("result");
+  const resultDiv = document.getElementById("result");
 
-      let results = courses.map(course => {
-        let score = 0;
+  let course = "전농로 러닝코스";
+  let reason = "접근성이 좋고 일상 러닝에 적합한 코스입니다.";
 
-        if (course.level === userLevel) {
-          score += 50;
-        }
+  if (mood === "바다") {
+    course = "함덕해변 러닝코스";
+    reason = "제주 바다 풍경과 함께 러닝할 수 있는 대표 해안 코스입니다.";
+  }
 
-        if (course.environment === userEnvironment) {
-          score += 30;
-        }
+  if (mood === "자연" || mood === "힐링") {
+    course = "사려니숲길";
+    reason = "숲길 중심 코스로 힐링과 자연 분위기에 적합합니다.";
+  }
 
-        return { ...course, score };
-      });
+  if (purpose === "장거리 러닝" || distance === "10km 이상") {
+    course = "제주올레 해안코스";
+    reason = "장거리 러닝과 체력 향상 목적에 적합한 코스입니다.";
+  }
 
-      results = results
-        .filter(course => course.score >= 50)
-        .sort((a, b) => b.score - a.score);
+  if (weather === "야간 러닝 가능") {
+    reason += " 가로등과 접근성이 좋아 야간 러닝에도 적합합니다.";
+  }
 
-      resultDiv.innerHTML = "<h2>추천 결과</h2>";
-
-      if (results.length === 0) {
-        resultDiv.innerHTML += "<p>조건에 맞는 추천 코스가 없습니다.</p>";
-        return;
-      }
-
-      results.forEach(course => {
-        resultDiv.innerHTML += `
-          <div class="course-card">
-            <h3>${course.name}</h3>
-            <p>거리: ${course.distance}</p>
-            <p>난이도: ${course.level}</p>
-            <p>환경: ${course.environment}</p>
-            <p class="score">추천 점수: ${course.score}</p>
-          </div>
-        `;
-      });
-    }
-  </script>
-  <!-- update -->
-   ㄴ
+  resultDiv.innerHTML = `
+    <div class="course-card">
+      <h2>${course}</h2>
+      <p>${reason}</p>
+      <p><strong>선택 조건:</strong></p>
+      <p>
+        ${level} /
+        ${distance} /
+        ${mood} /
+        ${purpose} /
+        ${safety} /
+        ${weather}
+      </p>
+    </div>
+  `;
+}
+</script>
